@@ -1,0 +1,45 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="192"
+  height="192"
+  viewBox="0 0 192 192"
+>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#173d27"/>
+      <stop offset="100%" stop-color="#3d8c55"/>
+    </linearGradient>
+
+    <linearGradient id="tree" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dff3d9"/>
+      <stop offset="100%" stop-color="#83c58c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="192" height="192" rx="44" fill="url(#background)"/>
+
+  <circle
+    cx="145"
+    cy="45"
+    r="24"
+    fill="#b9dba9"
+    opacity="0.16"
+  />
+
+  <path
+    d="M96 26L52 91H75L42 137H82V162H110V137H150L117 91H140Z"
+    fill="url(#tree)"
+  />
+
+  <path
+    d="M96 48L68 91H82L61 122H86V148H106V122H131L110 91H124Z"
+    fill="#f4fbef"
+    opacity="0.9"
+  />
+
+  <circle cx="145" cy="143" r="12" fill="#76b4e3"/>
+  <path
+    d="M145 132C145 132 136 143 136 149C136 154 140 158 145 158C150 158 154 154 154 149C154 143 145 132 145 132Z"
+    fill="#dff3ff"
+  />
+</svg>
