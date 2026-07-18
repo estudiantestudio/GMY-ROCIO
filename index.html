@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#215c38">
+  <meta name="description" content="Agenda de ejercicio, hidratación, alimentación y bienestar de Rocío.">
+
+  <title>Focus Forest · Rocío</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <div id="offlineBanner" class="offline-banner hidden">
+    Estás sin conexión. Tus datos siguen disponibles.
+  </div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button
+        id="menuButton"
+        class="icon-button"
+        type="button"
+        aria-label="Abrir menú"
+      >
+        ☰
+      </button>
+
+      <div class="topbar-title">
+        <span id="pageEyebrow">FOCUS FOREST</span>
+        <strong id="pageTitle">Mi día</strong>
+      </div>
+
+      <button
+        id="notificationButton"
+        class="icon-button notification-button"
+        type="button"
+        aria-label="Activar notificaciones"
+      >
+        🔔
+        <span id="notificationDot" class="notification-dot"></span>
+      </button>
+    </header>
+
+    <aside id="sideMenu" class="side-menu" aria-hidden="true">
+      <div class="side-menu-header">
+        <div class="avatar large-avatar">R</div>
+
+        <div>
+          <strong>Rocío</strong>
+          <span>Focus Forest</span>
+        </div>
+
+        <button
+          id="closeMenuButton"
+          class="icon-button"
+          type="button"
+          aria-label="Cerrar menú"
+        >
+          ✕
+        </button>
+      </div>
+
+      <nav class="side-navigation">
+        <button type="button" data-view="today">🏡 Mi día</button>
+        <button type="button" data-view="calendar">📅 Calendario</button>
+        <button type="button" data-view="training">🏋️ Entrenamientos</button>
+        <button type="button" data-view="water">💧 Agua</button>
+        <button type="button" data-view="supplements">💊 Suplementos</button>
+        <button type="button" data-view="food">🥗 Comer bien</button>
+        <button type="button" data-view="goals">🎯 Metas</button>
+        <button type="button" data-view="statistics">📊 Estadísticas</button>
+        <button type="button" data-view="forest">🌲 Mi bosque</button>
+        <button type="button" data-view="profile">👤 Perfil</button>
+      </nav>
+
+      <div class="side-menu-footer">
+        <button id="themeButton" class="secondary-button full-width" type="button">
+          🌙 Cambiar apariencia
+        </button>
+      </div>
+    </aside>
+
+    <div id="menuBackdrop" class="menu-backdrop hidden"></div>
+
+    <main id="mainContent" class="main-content">
+      <!-- MI DÍA -->
+      <section id="todayView" class="view active-view">
+        <div class="hero-card">
+          <div class="forest-overlay"></div>
+
+          <div class="hero-content">
+            <p id="currentDate" class="current-date"></p>
+
+            <h1>
+              Buenos días,<br>
+              <span>Rocío</span> 🌿
+            </h1>
+
+            <p class="hero-message">
+              Cada pequeño paso te acerca a tu mejor versión.
+            </p>
+
+            <div class="hero-progress">
+              <div>
+                <span>Progreso de hoy</span>
+                <strong id="heroProgressText">0%</strong>
+              </div>
+
+              <div class="progress-track dark-track">
+                <div id="heroProgressBar" class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="section-block floating-section">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">AGENDA</span>
+              <h2>Próximos entrenamientos</h2>
+            </div>
+
+            <button
+              class="text-button"
+              type="button"
+              data-go-view="calendar"
+            >
+              Ver agenda ›
+            </button>
+          </div>
+
+          <div id="todayTrainingList" class="stack-list"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">HIDRATACIÓN</span>
+              <h2>Agua de hoy</h2>
+            </div>
+
+            <button
+              class="text-button"
+              type="button"
+              data-go-view="water"
+            >
+              Ver detalle ›
+            </button>
+          </div>
+
+          <div class="water-summary-card">
+            <div class="water-drops" id="waterDrops"></div>
+
+            <div class="mini-ring" id="miniWaterRing">
+              <span id="miniWaterPercent">0%</span>
+            </div>
+          </div>
+
+          <button
+            id="quickWaterButton"
+            class="primary-button full-width"
+            type="button"
+          >
+            💧 Agregar 250 ml
+          </button>
+        </section>
+
+        <section class="dashboard-grid">
+          <button
+            class="dashboard-card food-card"
+            type="button"
+            data-go-view="food"
+          >
+            <span class="dashboard-icon">🥗</span>
+            <span>Comidas</span>
+            <strong id="todayMealsSummary">0/5 completadas</strong>
+          </button>
+
+          <button
+            class="dashboard-card supplements-card"
+            type="button"
+            data-go-view="supplements"
+          >
+            <span class="dashboard-icon">💊</span>
+            <span>Suplementos</span>
+            <strong id="todaySupplementsSummary">0/4 completados</strong>
+          </button>
+
+          <button
+            class="dashboard-card goals-card"
+            type="button"
+            data-go-view="goals"
+          >
+            <span class="dashboard-icon">🎯</span>
+            <span>Metas del día</span>
+            <strong id="todayGoalsSummary">0/4 completadas</strong>
+          </button>
+
+          <button
+            class="dashboard-card progress-card"
+            type="button"
+            data-go-view="statistics"
+          >
+            <span class="dashboard-icon">🌱</span>
+            <span>Día completado</span>
+            <strong id="todayProgressSummary">0%</strong>
+          </button>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">IMPORTANTE</span>
+              <h2>Pendientes principales</h2>
+            </div>
+          </div>
+
+          <div id="importantPendingList" class="pending-card"></div>
+        </section>
+
+        <section class="quote-card">
+          <div>
+            <span>MENSAJE DEL DÍA</span>
+            <blockquote id="dailyQuote">
+              “La disciplina de hoy construye la libertad de mañana.”
+            </blockquote>
+          </div>
+
+          <div class="quote-illustration">🌲</div>
+        </section>
+      </section>
+
+      <!-- CALENDARIO -->
+      <section id="calendarView" class="view">
+        <div class="page-introduction">
+          <span>ORGANIZACIÓN</span>
+          <h1>Calendario</h1>
+          <p>Organiza tus entrenamientos y actividades de la semana.</p>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment active-segment" type="button">Semana</button>
+          <button class="segment" type="button">Mes</button>
+        </div>
+
+        <div id="weekSelector" class="week-selector"></div>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">ACTIVIDADES</span>
+              <h2 id="selectedDayTitle">Entrenamientos</h2>
+            </div>
+
+            <button id="addTrainingButton" class="round-add-button" type="button">
+              +
+            </button>
+          </div>
+
+          <div id="calendarTrainingList" class="stack-list"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">COMPLETADOS</span>
+              <h2>Historial reciente</h2>
+            </div>
+          </div>
+
+          <div id="completedTrainingList" class="stack-list compact-list"></div>
+        </section>
+      </section>
+
+      <!-- ENTRENAMIENTOS -->
+      <section id="trainingView" class="view">
+        <div class="page-introduction">
+          <span>DEPORTE</span>
+          <h1>Entrenamientos</h1>
+          <p>Registra rutinas, series, repeticiones, energía y progreso.</p>
+        </div>
+
+        <section class="training-focus-card">
+          <div class="training-focus-icon">🥋</div>
+
+          <div class="training-focus-content">
+            <span>PRÓXIMA ACTIVIDAD</span>
+            <h2 id="nextTrainingName">Jiu-jitsu</h2>
+            <p id="nextTrainingTime">Hoy · 19:00–20:00</p>
+          </div>
+
+          <span id="nextTrainingStatus" class="status-badge pending-status">
+            Pendiente
+          </span>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">RUTINA</span>
+              <h2>Rutina del entrenamiento</h2>
+            </div>
+
+            <button id="editRoutineButton" class="text-button" type="button">
+              Editar
+            </button>
+          </div>
+
+          <div id="routineList" class="routine-list"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">REGISTRO</span>
+              <h2>¿Cómo te sientes?</h2>
+            </div>
+          </div>
+
+          <label class="form-label">
+            Energía
+            <input
+              id="energyRange"
+              type="range"
+              min="1"
+              max="5"
+              value="4"
+            >
+            <span id="energyOutput">4/5 ⚡</span>
+          </label>
+
+          <label class="form-label">
+            Molestias o dolor
+            <select id="painSelect">
+              <option value="Ninguna">Ninguna</option>
+              <option value="Leve">Molestia leve</option>
+              <option value="Moderada">Dolor moderado</option>
+              <option value="Fuerte">Dolor fuerte</option>
+            </select>
+          </label>
+
+          <label class="form-label">
+            Notas personales
+            <textarea
+              id="trainingNotes"
+              rows="4"
+              placeholder="Escribe cómo salió el entrenamiento..."
+            ></textarea>
+          </label>
+        </section>
+
+        <div class="three-action-grid">
+          <button
+            id="completeTrainingButton"
+            class="action-button success-action"
+            type="button"
+          >
+            ✓
+            <span>Completado</span>
+          </button>
+
+          <button
+            id="remindTrainingButton"
+            class="action-button warning-action"
+            type="button"
+          >
+            ⏰
+            <span>Recordar después</span>
+          </button>
+
+          <button
+            id="changeTrainingButton"
+            class="action-button neutral-action"
+            type="button"
+          >
+            ✏️
+            <span>Cambiar horario</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- AGUA -->
+      <section id="waterView" class="view">
+        <div class="page-introduction">
+          <span>BIENESTAR</span>
+          <h1>Agua</h1>
+          <p>Mantén tu hidratación al día de forma rápida.</p>
+        </div>
+
+        <section class="water-main-card">
+          <div id="waterProgressRing" class="water-progress-ring">
+            <div class="water-ring-center">
+              <span class="water-big-drop">💧</span>
+              <strong id="waterCurrentAmount">0 ml</strong>
+              <span id="waterGoalAmount">de 2.500 ml</span>
+              <b id="waterMainPercent">0%</b>
+            </div>
+          </div>
+
+          <div class="water-actions">
+            <button class="water-add-button" type="button" data-water="250">
+              +250 ml
+            </button>
+
+            <button class="water-small-button" type="button" data-water="500">
+              +500 ml
+            </button>
+
+            <button id="undoWaterButton" class="water-small-button" type="button">
+              Deshacer
+            </button>
+          </div>
+        </section>
+
+        <section class="metrics-grid">
+          <article class="metric-card">
+            <span>Meta diaria</span>
+            <strong id="waterMetricGoal">2.500 ml</strong>
+            <i>🎯</i>
+          </article>
+
+          <article class="metric-card">
+            <span>Vasos tomados</span>
+            <strong id="waterMetricGlasses">0 de 10</strong>
+            <i>🥛</i>
+          </article>
+
+          <article class="metric-card">
+            <span>Racha actual</span>
+            <strong id="waterMetricStreak">0 días</strong>
+            <i>🔥</i>
+          </article>
+        </section>
+
+        <section class="encouragement-card">
+          <div>
+            <strong id="waterEncouragementTitle">¡Comencemos!</strong>
+            <p id="waterEncouragementText">
+              Tu cuerpo necesita agua para rendir.
+            </p>
+          </div>
+
+          <span>💦</span>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">CONFIGURACIÓN</span>
+              <h2>Meta de hidratación</h2>
+            </div>
+          </div>
+
+          <label class="form-label">
+            Meta diaria en mililitros
+            <input
+              id="waterGoalInput"
+              type="number"
+              min="500"
+              max="6000"
+              step="250"
+              value="2500"
+            >
+          </label>
+
+          <button id="saveWaterGoalButton" class="secondary-button" type="button">
+            Guardar meta
+          </button>
+        </section>
+      </section>
+
+      <!-- SUPLEMENTOS -->
+      <section id="supplementsView" class="view">
+        <div class="page-introduction">
+          <span>ORGANIZACIÓN</span>
+          <h1>Suplementos</h1>
+          <p>Marca únicamente los suplementos que realmente utilizas.</p>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment active-segment" type="button">Hoy</button>
+          <button class="segment" type="button">Todos</button>
+        </div>
+
+        <section class="section-block">
+          <div id="supplementsList" class="check-list"></div>
+        </section>
+
+        <section class="completion-summary-card">
+          <div>
+            <strong id="supplementsProgressText">0/4 completados</strong>
+            <p>Sigue así, tú puedes 💪</p>
+          </div>
+
+          <div id="supplementsRing" class="small-progress-ring">
+            <span id="supplementsPercent">0%</span>
+          </div>
+        </section>
+
+        <button id="addSupplementButton" class="primary-button full-width" type="button">
+          + Agregar suplemento
+        </button>
+
+        <p class="health-note">
+          La aplicación no determina dosis. Usa las instrucciones de la etiqueta
+          o de un profesional de salud.
+        </p>
+      </section>
+
+      <!-- COMER BIEN -->
+      <section id="foodView" class="view">
+        <div class="page-introduction">
+          <span>NUTRICIÓN</span>
+          <h1>Comer bien</h1>
+          <p>Planifica tus comidas sin castigos ni restricciones extremas.</p>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment active-segment" type="button">Hoy</button>
+          <button class="segment" type="button">Plan semanal</button>
+        </div>
+
+        <section class="section-block">
+          <div id="mealsList" class="check-list"></div>
+        </section>
+
+        <section class="recipe-card">
+          <span class="recipe-label">RECETA RECOMENDADA</span>
+
+          <div class="recipe-content">
+            <div class="recipe-emoji" id="recipeEmoji">🥞</div>
+
+            <div>
+              <h2 id="recipeName">Panqueques proteicos</h2>
+              <p id="recipeDescription">
+                Plátano, huevo, avena y proteína.
+              </p>
+
+              <div class="recipe-meta">
+                <span id="recipeTime">⏱ 15 min</span>
+                <span id="recipeProtein">💪 28 g proteína</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-buttons">
+            <button id="newRecipeButton" class="secondary-button" type="button">
+              🎲 Otra receta
+            </button>
+
+            <button id="favoriteRecipeButton" class="secondary-button" type="button">
+              ♡ Guardar
+            </button>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">PLAN SEMANAL</span>
+              <h2>Comidas sugeridas</h2>
+            </div>
+          </div>
+
+          <div id="weeklyMealPlan" class="weekly-meal-plan"></div>
+        </section>
+      </section>
+
+      <!-- METAS -->
+      <section id="goalsView" class="view">
+        <div class="page-introduction">
+          <span>CONSTANCIA</span>
+          <h1>Metas</h1>
+          <p>Avanza con objetivos pequeños, claros y posibles.</p>
+        </div>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">HOY</span>
+              <h2>Metas diarias</h2>
+            </div>
+
+            <button id="addGoalButton" class="round-add-button" type="button">
+              +
+            </button>
+          </div>
+
+          <div id="goalsList" class="check-list"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">SEMANA</span>
+              <h2>Progreso semanal</h2>
+            </div>
+
+            <strong id="weeklyProgressText">0%</strong>
+          </div>
+
+          <div class="progress-track">
+            <div id="weeklyProgressBar" class="progress-fill"></div>
+          </div>
+        </section>
+
+        <section class="streak-card">
+          <div>
+            <span>RACHA ACTUAL</span>
+            <strong id="mainStreakText">0 días</strong>
+          </div>
+
+          <span class="streak-fire">🔥</span>
+        </section>
+
+        <section class="quote-card light-quote">
+          <div>
+            <span>RECUERDA</span>
+            <blockquote>
+              “No necesitas hacerlo perfecto. Necesitas volver a hacerlo.”
+            </blockquote>
+          </div>
+
+          <div class="quote-illustration">🏔️</div>
+        </section>
+      </section>
+
+      <!-- ESTADÍSTICAS -->
+      <section id="statisticsView" class="view">
+        <div class="page-introduction">
+          <span>PROGRESO</span>
+          <h1>Estadísticas</h1>
+          <p>Observa tu constancia sin llenarte de números innecesarios.</p>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment active-segment" type="button">Semana</button>
+          <button class="segment" type="button">Mes</button>
+          <button class="segment" type="button">3 meses</button>
+        </div>
+
+        <section class="chart-card">
+          <div class="chart-header">
+            <div>
+              <span>Entrenamientos</span>
+              <strong id="trainingChartSummary">0 de 7 completados</strong>
+            </div>
+
+            <b id="trainingChartPercent">0%</b>
+          </div>
+
+          <div id="trainingBars" class="bar-chart"></div>
+        </section>
+
+        <section class="chart-card">
+          <div class="chart-header">
+            <div>
+              <span>Agua</span>
+              <strong id="waterChartSummary">Promedio diario</strong>
+            </div>
+
+            <b id="waterChartAverage">0 ml</b>
+          </div>
+
+          <div id="waterBars" class="bar-chart blue-chart"></div>
+        </section>
+
+        <section class="chart-card">
+          <div class="chart-header">
+            <div>
+              <span>Comidas saludables</span>
+              <strong>Promedio diario</strong>
+            </div>
+
+            <b id="mealChartAverage">0 de 5</b>
+          </div>
+
+          <div id="mealBars" class="bar-chart orange-chart"></div>
+        </section>
+
+        <section class="encouragement-card">
+          <div>
+            <strong>¡Excelente trabajo!</strong>
+            <p>Sigue construyendo tu mejor versión.</p>
+          </div>
+
+          <span>🌲</span>
+        </section>
+      </section>
+
+      <!-- BOSQUE -->
+      <section id="forestView" class="view">
+        <div class="page-introduction">
+          <span>RECOMPENSAS</span>
+          <h1>Mi bosque</h1>
+          <p>Cada hábito completado hace crecer tu bosque personal.</p>
+        </div>
+
+        <section class="forest-scene">
+          <div class="sun">☀️</div>
+          <div class="cloud cloud-one">☁️</div>
+          <div class="cloud cloud-two">☁️</div>
+          <div id="birdsContainer" class="birds-container"></div>
+          <div id="forestTrees" class="forest-trees"></div>
+          <div class="forest-ground"></div>
+        </section>
+
+        <section class="forest-level-card">
+          <div>
+            <span>NIVEL DEL BOSQUE</span>
+            <strong id="forestLevelName">Semilla</strong>
+            <p id="forestLevelDescription">
+              Completa hábitos para desbloquear nuevos árboles.
+            </p>
+          </div>
+
+          <div class="forest-level-number" id="forestLevelNumber">1</div>
+        </section>
+
+        <section class="metrics-grid">
+          <article class="metric-card">
+            <span>Árboles</span>
+            <strong id="treeCount">1</strong>
+            <i>🌳</i>
+          </article>
+
+          <article class="metric-card">
+            <span>Aves</span>
+            <strong id="birdCount">0</strong>
+            <i>🐦</i>
+          </article>
+
+          <article class="metric-card">
+            <span>Puntos</span>
+            <strong id="forestPoints">0</strong>
+            <i>✨</i>
+          </article>
+        </section>
+      </section>
+
+      <!-- PERFIL -->
+      <section id="profileView" class="view">
+        <div class="profile-header-card">
+          <div class="avatar profile-avatar">R</div>
+
+          <div>
+            <span>PERFIL PERSONAL</span>
+            <h1>Rocío</h1>
+            <p>Construyendo hábitos saludables 🌿</p>
+          </div>
+        </div>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">DATOS</span>
+              <h2>Configuración personal</h2>
+            </div>
+          </div>
+
+          <label class="form-label">
+            Nombre
+            <input id="profileNameInput" type="text" value="Rocío">
+          </label>
+
+          <label class="form-label">
+            Meta de agua
+            <input
+              id="profileWaterGoalInput"
+              type="number"
+              min="500"
+              max="6000"
+              step="250"
+              value="2500"
+            >
+          </label>
+
+          <label class="form-label">
+            Hora silenciosa desde
+            <input id="quietStartInput" type="time" value="22:30">
+          </label>
+
+          <label class="form-label">
+            Hora silenciosa hasta
+            <input id="quietEndInput" type="time" value="07:00">
+          </label>
+
+          <button id="saveProfileButton" class="primary-button full-width" type="button">
+            Guardar cambios
+          </button>
+        </section>
+
+        <section class="section-block">
+          <div class="setting-row">
+            <div>
+              <strong>Modo oscuro</strong>
+              <span>Reduce el brillo de la aplicación.</span>
+            </div>
+
+            <label class="switch">
+              <input id="darkModeSwitch" type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong>Animaciones</strong>
+              <span>Movimiento suave de hojas y elementos.</span>
+            </div>
+
+            <label class="switch">
+              <input id="animationSwitch" type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong>Recordatorios</strong>
+              <span>Alertas de agua, deporte y suplementos.</span>
+            </div>
+
+            <label class="switch">
+              <input id="reminderSwitch" type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">DATOS</span>
+              <h2>Copia de seguridad</h2>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            <button id="exportDataButton" class="secondary-button" type="button">
+              Exportar datos
+            </button>
+
+            <button id="resetDataButton" class="danger-button" type="button">
+              Reiniciar aplicación
+            </button>
+          </div>
+        </section>
+
+        <p class="privacy-note">
+          Tus registros se guardan solamente en este dispositivo mediante
+          almacenamiento local.
+        </p>
+      </section>
+    </main>
+
+    <nav class="bottom-navigation" aria-label="Navegación principal">
+      <button class="bottom-nav-button active-nav" type="button" data-view="today">
+        <span>🏡</span>
+        <small>Mi día</small>
+      </button>
+
+      <button class="bottom-nav-button" type="button" data-view="calendar">
+        <span>📅</span>
+        <small>Calendario</small>
+      </button>
+
+      <button class="bottom-nav-button main-add-button" id="mainAddButton" type="button">
+        <span>＋</span>
+        <small>Agregar</small>
+      </button>
+
+      <button class="bottom-nav-button" type="button" data-view="water">
+        <span>💧</span>
+        <small>Agua</small>
+      </button>
+
+      <button class="bottom-nav-button" type="button" data-view="profile">
+        <span>👤</span>
+        <small>Perfil</small>
+      </button>
+    </nav>
+  </div>
+
+  <!-- MODAL GENERAL -->
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <section
+      id="appModal"
+      class="app-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-handle"></div>
+
+      <header class="modal-header">
+        <div>
+          <span id="modalEyebrow">NUEVO REGISTRO</span>
+          <h2 id="modalTitle">Agregar</h2>
+        </div>
+
+        <button id="closeModalButton" class="icon-button" type="button">
+          ✕
+        </button>
+      </header>
+
+      <div id="modalContent" class="modal-content"></div>
+    </section>
+  </div>
+
+  <!-- MENSAJE TEMPORAL -->
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
